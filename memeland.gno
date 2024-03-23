@@ -97,7 +97,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	}
 
 	if len(postsInRange) == 0 || startIndex >= len(postsInRange){
-		return "{}"
+		return "[]"
 	}
 
 	switch sortBy {
@@ -180,7 +180,7 @@ func timestampSort(posts []*Post) {
     n := len(posts)
     for i := 0; i < n; i++ {
         for j := 0; j < n-i-1; j++ {
-            if posts[j].Timestamp.Before(posts[j+1].Timestamp) {
+            if posts[j].Timestamp.Unix() < posts[j+1].Timestamp.Unix() {
                 posts[j], posts[j+1] = posts[j+1], posts[j]
             }
         }
