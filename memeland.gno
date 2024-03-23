@@ -102,9 +102,9 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 
 	switch sortBy {
 	case "UPVOTES":
-		// upvoteSort(postsInRange)
+		upvoteSort(postsInRange)
 	case "DATE_CREATED":
-		// upvoteSort(postsInRange)
+		timestampSort(postsInRange)
 	default:
 		panic("invalid sortBy")
 	}
@@ -169,7 +169,18 @@ func upvoteSort(posts []*Post) {
     n := len(posts)
     for i := 0; i < n; i++ {
         for j := 0; j < n-i-1; j++ {
-            if len(posts[j].UpvoteTracker) > len(posts[j+1].UpvoteTracker.Size()) {
+            if posts[j].UpvoteTracker.Size() < posts[j+1].UpvoteTracker.Size() {
+                posts[j], posts[j+1] = posts[j+1], posts[j]
+            }
+        }
+    }
+}
+
+func timestampSort(posts []*Post) {
+    n := len(posts)
+    for i := 0; i < n; i++ {
+        for j := 0; j < n-i-1; j++ {
+            if posts[j].Timestamp.Before(posts[j+1].Timestamp) {
                 posts[j], posts[j+1] = posts[j+1], posts[j]
             }
         }
